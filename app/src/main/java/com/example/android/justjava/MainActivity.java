@@ -21,6 +21,8 @@ import java.text.NumberFormat;
  */
 public class MainActivity extends AppCompatActivity {
 
+    int quantity = 2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,9 +33,8 @@ public class MainActivity extends AppCompatActivity {
      * This method is called when the order button is clicked.
      */
     public void submitOrder(View view) {
-        int numberOfCoffees = 2;
-        display(numberOfCoffees);
-        displayPrice(numberOfCoffees*5);
+        String priceMessage = "Total: "+(quantity*5)+"\nThank You!";
+        displayMessage(priceMessage);
     }
 
     /**
@@ -50,5 +51,29 @@ public class MainActivity extends AppCompatActivity {
     private void displayPrice(int number) {
         TextView priceTextView = (TextView) findViewById(R.id.price_text_view);
         priceTextView.setText(NumberFormat.getCurrencyInstance().format(number));
+    }
+
+    /**
+     * This method displays the given text on the screen.
+     */
+    private void displayMessage(String message) {
+        TextView priceTextView = (TextView) findViewById(R.id.price_text_view);
+        priceTextView.setText(message);
+    }
+
+    /**
+     * This method increments the quntity
+     */
+    public void increment(View view){
+        quantity = quantity+1;
+        display(quantity);
+    }
+
+    /**
+     * This method decrements the quntity
+     */
+    public void decrement(View view){
+        quantity = quantity-1;
+        display(quantity);
     }
 }
