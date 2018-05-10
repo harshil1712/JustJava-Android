@@ -10,6 +10,8 @@ package com.example.android.justjava;
 
 
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -45,8 +47,15 @@ public class MainActivity extends AppCompatActivity {
         Editable name = nameInput.getText();
         int price = calculatePrice(hasChocolate,hasWhippedCream);
         String priceMessage = createOrederSummary(name, price, hasWhippedCream, hasChocolate);
-        displayMessage(priceMessage);
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:")); // only email apps should handle this
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Order Summary");
+        intent.putExtra(Intent.EXTRA_TEXT, priceMessage);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
     }
+
 
     /**
      * This method displays the given quantity value on the screen.
@@ -57,18 +66,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * This method displays the given text on the screen.
-     */
-    private void displayMessage(String message) {
-        TextView orderSummaryTextView = (TextView) findViewById(R.id.order_summary_text_view);
-        orderSummaryTextView.setText(message);
-    }
-
-    /**
      * This method increments the quntity
      */
     public void increment(View view){
-        quantity = quantity+1;
+        if(quantity<100) {
+            quantity = quantity + 1;
+        }
         display(quantity);
     }
 
@@ -76,7 +79,12 @@ public class MainActivity extends AppCompatActivity {
      * This method decrements the quntity
      */
     public void decrement(View view){
-        quantity = quantity-1;
+        if(quantity==1){
+            return ;
+        }
+        else {
+            quantity = quantity - 1;
+        }
         display(quantity);
     }
 
