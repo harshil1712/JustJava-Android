@@ -12,7 +12,11 @@ package com.example.android.justjava;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.TextView;
 import java.text.NumberFormat;
 
@@ -33,7 +37,14 @@ public class MainActivity extends AppCompatActivity {
      * This method is called when the order button is clicked.
      */
     public void submitOrder(View view) {
-        String priceMessage = "Total: "+(quantity*5)+"\nThank You!";
+        CheckBox whippedCreamCheckBox = (CheckBox) findViewById(R.id.whipped_cream_checkbox);
+        Boolean hasWhippedCream = whippedCreamCheckBox.isChecked();
+        CheckBox chocolateCheckBox = (CheckBox) findViewById(R.id.chocolate_checkbox);
+        Boolean hasChocolate = chocolateCheckBox.isChecked();
+        EditText nameInput = (EditText) findViewById(R.id.name_input);
+        Editable name = nameInput.getText();
+        int price = calculatePrice(hasChocolate,hasWhippedCream);
+        String priceMessage = createOrederSummary(name, price, hasWhippedCream, hasChocolate);
         displayMessage(priceMessage);
     }
 
@@ -46,19 +57,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * This method displays the given price on the screen.
-     */
-    private void displayPrice(int number) {
-        TextView priceTextView = (TextView) findViewById(R.id.price_text_view);
-        priceTextView.setText(NumberFormat.getCurrencyInstance().format(number));
-    }
-
-    /**
      * This method displays the given text on the screen.
      */
     private void displayMessage(String message) {
-        TextView priceTextView = (TextView) findViewById(R.id.price_text_view);
-        priceTextView.setText(message);
+        TextView orderSummaryTextView = (TextView) findViewById(R.id.order_summary_text_view);
+        orderSummaryTextView.setText(message);
     }
 
     /**
@@ -75,5 +78,22 @@ public class MainActivity extends AppCompatActivity {
     public void decrement(View view){
         quantity = quantity-1;
         display(quantity);
+    }
+
+    private int calculatePrice(boolean hasChocolate, boolean hasWhippedCream){
+        int basePrice =5;
+        if(hasChocolate){
+            basePrice = basePrice+ 2;
+        }
+        if(hasWhippedCream) {
+            basePrice = basePrice + 1;
+        }
+        return basePrice * quantity;
+    }
+
+    private String createOrederSummary(Editable name, int price, boolean addWhippedCream, boolean addChocolate){
+        String priceMessage = "Name: "+name+"\nAdd whipped cream? "+addWhippedCream+"\nAdd Chocolate? "+addChocolate+"\nQuantity: "+quantity+"\nTotal: "+price+"\nThank You!";
+        return priceMessage;
+
     }
 }
